@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+body {
+    margin: 0;
+    background-color: #f5f5f5;
+    font-family: lato,sans-serif;
+}
+
+.breadcrumb {
+    margin-left: 10px;
+}
+header {
+    text-align: center;
+    margin: 50px auto 50px; 
+}
+
+h2 {
+    font-size: 30px;
+    color: #c0a268;
+    font-weight: 300;
+    margin-bottom: 6px;
+    
+}
+
+header h3 {
+    font-size: 20px;
+    color: #737373;
+    font-weight: 350;
+}
+
+.text-block > .key-choice {
+    font-size: 15px;
+    color: #737373;
+    font-weight: 400;
+}
+
+form {
+    text-align: center;
+    padding: 0 30px;
+    margin: 30px auto 10px;
+    max-width: 800px;
+    
+}
+
+input[type="text"] {
+    height: 45px;
+    width: 636px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 22px;
+    border: solid 1px #d9d9d9;
+    padding: 0px 20px;   
+}
+
+input[type="text"].error {
+	box-shadow: 0px 0px 10px firebrick;
+}
+
+input[type="submit"] {
+    background-color: #282f36;
+    color: #f5f5f5;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+    padding: 10px 19px;
+    border-radius: 22px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    height: 45px;
+	margin-left: -90px;
+}
+
+.text-block {
+    margin-top: 20px;
+    width: 800px;
+    height: 598px;
+    background-color: white;
+    text-align: left;
+    padding: 15px 10px 10px 15px;
+    border: solid 1px #d9d9d9;
+}
+
+.keywords-selection {
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+.keywords-selection > span {
+    text-decoration: underline;
+    line-height: 20px;
+    cursor: pointer;
+    font-weight: 400px;
+    color: #282f35;
+}
+
+#check-keywords {
+    padding-inline-end: 20px;
+}
+
+#uncheck-keywords {
+    padding-inline-end: 20px;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 60px 20px 6px;
+    
+}
+
+.auto {
+    padding: 2px;
+    color: #737373;
+    font-weight: 400; 
+}
+
+label, input[type= "checkbox"] {
+    cursor: pointer;
+}
+
+.content > textarea {
+    border: solid 1px #737373;
+}
+
+.next-step {
+    text-align: center;
+}
+
+.keywords1, .keywords2, .keywords3 {
+    display: flex;
+    width: 800px;
+}
+
+.label {
+    width: 109px;
+    margin-left: 30px;
+    margin-right: 15px;
+    margin-top: 20px;;
+    font-size: 18px;
+    font-weight: 600;
+    color: #737373;
+}
+
+.data {
+    margin-top: 10px;
+    
+}
+
+.value {
+    border: solid 1px #d9d9d9;
+    padding: 15px;
+    width: 619px !important;
+}
+
+.details {
+    color: #737373;
+    font-size: 17px; 
+    margin-right: 2px;
+    
+}
+
+.keywords2 {
+    margin-top: 15px;
+}
+
+.edit-keywords {
+    height: 30px;;
+    right: 3px;
+    top: 3px;
+    border-radius: 11px;
+    background-color: rgb(115, 125, 135);
+    padding: 5px 10px;
+    line-height: 25px;
+    color: white;
+    margin-left: 40px;
+}
+
+.audit {
+    display: flex;
+    justify-content: space-between;
+}
+.audience {
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.Intentionnistes-24 {
+    font-weight: 600;
+}
+
+.Intentionnistes {
+    font-weight: 600;
+}
+
+.number {
+    font-weight: 400 !important;
+}
+
+.keywords3 {
+    margin-top: 15px;
+}
+.next-choice {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 40px;
+    padding: 20px;
+}
