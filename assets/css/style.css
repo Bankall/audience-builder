@@ -3,34 +3,33 @@
 body {
     margin: 0;
     background-color: #f5f5f5;
-    font-family: lato,sans-serif;
+    font-family: lato, sans-serif;
+	color: #737373;
 }
 
 .breadcrumb {
     margin-left: 10px;
 }
+
 header {
     text-align: center;
-    margin: 50px auto 50px; 
+    margin: 50px auto;
 }
 
 h2 {
     font-size: 30px;
-    color: #c0a268;
     font-weight: 300;
-    margin-bottom: 6px;
-    
+	color: #c0a268;
+    margin-bottom: 5px;
 }
 
 header h3 {
     font-size: 20px;
-    color: #737373;
-    font-weight: 350;
+    font-weight: 400;
 }
 
-.text-block > .key-choice {
+.key-choice {
     font-size: 15px;
-    color: #737373;
     font-weight: 400;
 }
 
@@ -38,18 +37,15 @@ form {
     text-align: center;
     padding: 0 30px;
     margin: 30px auto 10px;
-    max-width: 800px;
-    
 }
 
 input[type="text"] {
-    height: 45px;
-    width: 636px;
+    width: 650px;
+	padding: 15px 20px;
     display: inline-block;
     vertical-align: middle;
     border-radius: 22px;
     border: solid 1px #d9d9d9;
-    padding: 0px 20px;
 	text-transform: lowercase; 
 	outline: none;
 }
@@ -64,68 +60,78 @@ input[type="text"].error {
 
 input[type="submit"] {
     background-color: #282f36;
+	height: 45px;
+	margin-left: -90px;
+	padding: 10px 19px;
     color: #f5f5f5;
     font-size: 12px;
-    border: none;
-    cursor: pointer;
-    padding: 10px 19px;
+	font-weight: 700;
+	letter-spacing: 2px;    
+    cursor: pointer;    
     border-radius: 22px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    height: 45px;
-	margin-left: -90px;
+    border: none;
 }
 
-.text-block {
-    margin-top: 20px;
-    width: 800px;
-    height: 598px;
-    background-color: white;
-    text-align: left;
-    padding: 15px 10px 10px 15px;
+input[type="submit"][readonly="readonly"] {
+	opacity: 0.7;
+	cursor: not-allowed;
+}
+
+section {
+    width: 800px;    
+	margin: 20px auto;
+    padding: 15px;
+	background-color: white;
     border: solid 1px #d9d9d9;
 }
 
 .keywords-selection {
-    margin-top: 30px;
-    margin-left: 30px;
+    margin: 30px 0 0 30px;
 }
 
 .keywords-selection > span {
-    text-decoration: underline;
-    line-height: 20px;
-    cursor: pointer;
-    font-weight: 400px;
+    text-decoration: underline;    
     color: #282f35;
-}
-
-#check-keywords {
-    padding-inline-end: 20px;
-}
-
-#uncheck-keywords {
-    padding-inline-end: 20px;
+	cursor: pointer;
+	margin-right: 20px;
+	font-size: 13px;
 }
 
 .content {
+	margin: 20px;
     display: flex;
-    justify-content: space-between;
-    margin: 20px 60px 20px 6px;
-    
+	flex-wrap: wrap;
 }
 
-.auto {
-    padding: 2px;
+.keyword {
     color: #737373;
-    font-weight: 400; 
+    font-weight: 400;
+	width: 33%;
+	margin: 5px 0;
 }
 
-label, input[type= "checkbox"] {
+.keyword label, 
+.keyword input {
     cursor: pointer;
+	margin: 0;
+}
+
+.keyword label {
+	margin-left: 5px;
+}
+
+.keyword input {
+	top: 2px;
+	position: relative;
 }
 
 .content > textarea {
     border: solid 1px #737373;
+	width: 100%;
+	max-width: 100%;
+	min-width: 100%;
+	padding: 5px;
+	box-sizing: border-box;
 }
 
 .next-step {
