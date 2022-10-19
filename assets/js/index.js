@@ -61,7 +61,7 @@ const start = () => {
 	 * @param {String} body The HTML content to parse.
 	 * @return {Array} the top 30 keywords found, ordered by number of occurence
 	 */
-	const exctractKeywords = (body) => {
+	const extractKeywords = (body) => {
 		const emptyDiv = document.createElement("div"); // This empty will be used to clean up HTML markup
 		const anchorsContent = body.match(/<a.*?>(.*?)<\/ *a\W/gi); // Extract all anchors content from body
 
@@ -184,7 +184,7 @@ const start = () => {
 			let keywords = [];
 
 			if(data) {
-				keywords = exctractKeywords(data);
+				keywords = extractKeywords(data);
 			}
 
 			presentKeywords(keywords);
