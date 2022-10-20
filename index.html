@@ -30,18 +30,19 @@
 		</form>
 
 
-		<section id="keywords">
+		<section id="keywords" class="hidden">
 			<h2>Mots-clés detectés automatiquement</h2>
-       		<span class="key-choice">Confirmez que ces mots-clés correspondent à votre marque et à vos produits :</span>
+       		Confirmez que ces mots-clés correspondent à votre marque et à vos produits :
 			
-			<div class="keywords-selection">
+			<div class="keywords-selecting-tools">
 				<span id="check-keywords">Tout Sélectionner</span> 
 				<span id="uncheck-keywords">Tout déselectionner</span>
 			</div>
 
 			<div class="content"></div>
+			
 			<div>
-				<span class="key-choice">Ajoutez d'autres mots-clés (optionnel) :<span>
+				Ajoutez d'autres mots-clés (optionnel) :
 	
 				<div class="content">
 					<textarea name="manual-keywords" id="" cols="120" rows="4" placeholder="some, keyword"></textarea>
@@ -50,6 +51,57 @@
 
 			<div class="next-step">
 				<input name="analyze" type="submit" value="TROUVEZ VOTRE AUDIENCE">
+			</div>
+		</section>
+
+		<section id="analysis" class="hidden">
+			<div class="keywords row">
+				<span class="label">MOTS-CLÉS</span>
+				<div class="data">
+					<div class="value">
+						<span class="details">
+						</span>
+						<span class="edit-keywords">EDIT</span>
+					</div>
+				</div>
+			</div>
+	
+			<div class="audience row">
+				<span class="label">AUDIENCE</span>
+				<div class="data">
+					<div class="value">
+						<div class="details">
+							<div class="audit">
+								<div class="analysed-audience audience-results">
+									<div>Audience analysée</div>
+									<div class="number"></div>
+								</div>	
+								<div class="matching-audience audience-results">
+									<div>Intentionnistes</div>
+									<div class="number"></div>
+								</div>						
+								<div class="matching-audience-24 audience-results">
+									<div>Intentionnistes - 24h</div>
+									<div class="number">-</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="mediaplanning row">
+				<span class="label">PLANNING</span>
+				<div class="data">
+					<div class="value">
+						
+					</div>
+				</div>
+			</div>
+			<div class="buttons">       
+				<input name= "analyze" type="submit" value="LANCEZ VOTRE CAMPAGNE MAINTENANT !" formaction="" method="get" target="_blank">
+				<input name= "analyze" type="submit" value="ENREGISTRER !" formaction="" method="get" target="_blank">
+				<input name= "analyze" type="submit" value="PARTAGER !" formaction="" method="get" target="_blank">
 			</div>
 		</section>
 

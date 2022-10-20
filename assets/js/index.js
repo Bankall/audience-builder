@@ -10,6 +10,91 @@ const start = () => {
 	const startButton = document.querySelector("input[name=start]");
 
 	/**
+	 * Convert non array data structure to array
+	 * 
+	 *  @param {Any} nonArray non array
+	 */
+	const convertToArray = (nonArray) => Array.prototype.slice.call(nonArray);
+
+	const fetchAudience = (id, timestamp, keywords, pages) => {
+		if(!pages) {
+			pages = 0;
+		}
+
+		fetch(`https://dashboard.platform.pm/wsora/rtkeywords-get.php?id=${id}&pages=${Math.round((pages / (Date.now() - timestamp)) * 86400000)}`, {
+			method: 'POST',
+			body: keywords.join("\n")
+		}).then(response => {
+			response.json()
+				.then(data => {
+					pages += data.pages;
+
+					let mediaPlanning = Object.keys(data.domains).sort((a, b) => {
+						return data.domains[a] < data.domains[b] ? 1: -1;
+					}).slice(0, 30);
+
+					mediaPlanning = mediaPlanning.map(value => `<div>${value}</div>`);
+					document.querySelector(".mediaplanning .value").innerHTML = mediaPlanning.join("");
+
+					console.log(mediaPlanning);
+
+					setTimeout(() => {
+						fetchAudience(id, timestamp, keywords, pages);
+					}, 1000);
+				})
+				.catch(err => {
+
+				})
+		}).catch(err => {
+
+		});
+	};
+
+	/**
+	 * Start the keyword analysis
+	 * 
+	 *  @param {Array} keywords list of keywords
+	 */
+	const startAnalysis = (keywords) => {
+
+		document.querySelector(".keywords .value .details").innerHTML = keywords.join(", ");
+
+		fetch(`https://dashboard.platform.pm/wsora/rtkeywords-start.php`, {
+			method: 'POST',
+			body: keywords.join("\n")
+		}).then(response => {
+
+			response.json()
+				.then(data => {
+					if(data.ok) {
+						fetchAudience(data.id, Date.now(), keywords);
+					}
+				})
+				.catch(err => {
+
+				})
+
+		}).catch(err => {
+
+		});
+
+		showSection("#analysis");
+	};
+
+	/**
+	 * Used to hide all displayed section and display the one needed
+	 *
+	 * @param {String} section Querystring of the section to display.
+	 */
+	const showSection = (section) => {
+		document.querySelectorAll("section").forEach((section) => {
+			section.classList.add("hidden");
+		});
+
+		document.querySelector(section).classList.remove("hidden");
+	};
+
+	/**
 	 * Used to parse an array of keywords and built HTML markup
 	 *
 	 * @param {Array} keywords The keywords to present.
@@ -44,7 +129,7 @@ const start = () => {
 			});
 		});
 
-		// check keyword on click on label
+		// enable clicking on the label to have the same action as clicking on the checkbox
 		wrapper.querySelectorAll("label").forEach(label => {
 			label.addEventListener("click", () => {
 				const forAttribute = label.getAttribute("for");
@@ -53,6 +138,27 @@ const start = () => {
 				matchingInput.checked = !matchingInput.checked; // invert the value of matching checkbox
 			});
 		});
+
+		document.querySelector("input[name='analyze']").addEventListener("click", function() {
+			const selectedAutomaticKeywords = convertToArray(wrapper.querySelectorAll('.keyword')) // get all keywords
+										.filter(keyword => keyword.querySelector("input").checked) // filter keywords that are actually checked
+										.map(htmlElement => htmlElement.innerText); // extract innerText to have the text value instead of an HTMLElement
+
+			const selectedManualKeywords = document.querySelector("textarea[name='manual-keywords']").value
+											.replace(/\W/g, "") // remove unecessary whitespaces
+											.split(","); // convert the string to an array
+
+			// If we have manual keywords, concat them with the automatic keywords
+			const selectedKeywords = selectedManualKeywords.length ? selectedAutomaticKeywords.concat(selectedManualKeywords) : selectedManualKeywords;
+
+			if(!selectedKeywords.length) { // we must have at least one keywords to start the analysis
+
+			}
+
+			startAnalysis(selectedKeywords);
+		});
+
+		showSection("#keywords");
 	};
 
 	/**
