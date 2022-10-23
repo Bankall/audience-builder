@@ -2,6 +2,7 @@ const PORT = 3000;
 
 // Modules express installed for Node.js (use express, express-myconnction, body-parser and to manipulate Mysql Database      
 const express = require('express');
+const cors = require("cors");
 const bodyParser = require('body-parser'); // it's a middleware module to extracts the entire body of an incoming request stream and exposes it to req.body (after 4th version of express)
 const mysql = require('mysql');
 const myconnection = require('express-myconnection');
@@ -28,8 +29,8 @@ const config = {
 
 app.use(myconnection(mysql, config, 'pool')); // middleware with app.use variable => connecting betweenn app and bdd mysql (3 params)
 app.use(bodyParser.urlencoded({extended: true}));
-
 app.use(bodyParser.json());
+app.use(cors());
 
 //MySQL
 

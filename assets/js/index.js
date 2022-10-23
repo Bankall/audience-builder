@@ -29,10 +29,58 @@ const start = () => {
 
 		document.querySelector(section).classList.remove("hidden");
 	}; 
+	
+	/**
+	 * Returns an array with all selected automatic keyword
+	 *
+	 * @return {Array} checked keywords
+	 */
+	const getAutomaticKeywords = () => {
+		return convertToArray(document.querySelectorAll('section#keywords .keyword')) // get all keywords
+				.filter(keyword => keyword.querySelector("input").checked) // filter keywords that are actually checked
+				.map(htmlElement => htmlElement.innerText.replace(/\s/gi, "")); // extract innerText to have the text value instead of an HTMLElement
+	};
 
-	const saveAnalysis = () => {
+	/**
+	 * Returns an array with all manual keyword
+	 *
+	 * @return {Array} manual keywords
+	 */
+	const getManualKeywords = () => {
+		const selectedManualKeywords = document.querySelector("textarea[name='manual-keywords']").value;
+		
+		if(!selectedManualKeywords) { return []; }
+		
+		selectedManualKeywords
+			.replace(/\s/g, "") // remove unecessary whitespaces
+			.split(","); // convert the string to an array
+	
+		return selectedManualKeywords;
+	};
+
+	const saveAnalysis = (audienceAnalysis) => {
 		return new Promise((resolve, reject) => {
-			
+			fetch(`http://34.255.120.5:3000/analysis/`, {
+				method: 'POST',
+				body: JSON.stringify({
+					url: urlInput.value,
+					automatic_keywords: getAutomaticKeywords(),
+					manual_keywords: getManualKeywords(),
+					analysis_results: audienceAnalysis.getResults()
+				})
+			}).then(response => {
+				response.json()
+					.then(data => {
+						if(data.error) {
+							return reject(data.error);
+						} 
+
+						resolve(data.id);
+					})
+					.catch(err => {
+						reject(err);
+					});
+			})
 		});
 	}
 
@@ -82,21 +130,15 @@ const start = () => {
 		});
 
 		document.querySelector("input[name='analyze']").addEventListener("click", function() {
-			const selectedAutomaticKeywords = convertToArray(wrapper.querySelectorAll('.keyword')) // get all keywords
-										.filter(keyword => keyword.querySelector("input").checked) // filter keywords that are actually checked
-										.map(htmlElement => htmlElement.innerText); // extract innerText to have the text value instead of an HTMLElement
 
-			let selectedManualKeywords = document.querySelector("textarea[name='manual-keywords']").value;
-			if(selectedManualKeywords) {
-				selectedManualKeywords
-					.replace(/\s/g, "") // remove unecessary whitespaces
-					.split(","); // convert the string to an array
-			}
+			const selectedAutomaticKeywords = getAutomaticKeywords();
+			const selectedManualKeywords = getManualKeywords();
 
 			// If we have manual keywords, concat them with the automatic keywords
 			const selectedKeywords = selectedManualKeywords.length ? selectedAutomaticKeywords.concat(selectedManualKeywords) : selectedAutomaticKeywords;
 
 			const errorFeedBack = document.querySelector("#keywords .error-feedback");
+
 			if(!selectedKeywords.length) { // we must have at least one keywords to start the analysis
 				errorFeedBack.style.display = "block";
 				return;
@@ -115,14 +157,14 @@ const start = () => {
 			});
 
 			document.querySelector("input[name=save]").addEventListener("click", () => {
-				saveAnalysis()
+				saveAnalysis(audienceAnalysis)
 					.then(id => {
 						console.log(id);
 					});
 			});
 
 			document.querySelector("input[name=contact]").addEventListener("click", () => {
-				saveAnalysis()
+				saveAnalysis(audienceAnalysis)
 					.then(id => {
 						window.location.href = `https://piximedia.com/contact/?id=${id}`;
 					});
