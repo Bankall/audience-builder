@@ -24,11 +24,12 @@
 	</header>
 
 	<main>
-		<form>
-			<input name="url" type="text" placeholder="Entrez l'URL de votre site">
-			<input name="start" type="submit" value="START">
-		</form>
-
+		<section id="url">
+			<form>
+				<input name="url" type="text" placeholder="Entrez l'URL de votre site">
+				<input name="start" type="submit" value="START">
+			</form>
+		</section>
 
 		<section id="keywords" class="hidden">
 			<h2>Mots-clés detectés automatiquement</h2>
@@ -37,6 +38,10 @@
 			<div class="keywords-selecting-tools">
 				<span id="check-keywords">Tout Sélectionner</span> 
 				<span id="uncheck-keywords">Tout déselectionner</span>
+			</div>
+
+			<div class="error-feedback">
+				Vous devez selectionner au moins un mot-clés
 			</div>
 
 			<div class="content"></div>
@@ -74,11 +79,11 @@
 							<div class="audit">
 								<div class="analysed-audience audience-results">
 									<div>Audience analysée</div>
-									<div class="number"></div>
+									<div class="number">-</div>
 								</div>	
 								<div class="matching-audience audience-results">
 									<div>Intentionnistes</div>
-									<div class="number"></div>
+									<div class="number">-</div>
 								</div>						
 								<div class="matching-audience-24 audience-results">
 									<div>Intentionnistes - 24h</div>
@@ -93,15 +98,14 @@
 			<div class="mediaplanning row">
 				<span class="label">PLANNING</span>
 				<div class="data">
-					<div class="value">
-						
+					<div class="value loading">
+						Analyse en cours
 					</div>
 				</div>
 			</div>
-			<div class="buttons">       
-				<input name= "analyze" type="submit" value="LANCEZ VOTRE CAMPAGNE MAINTENANT !" formaction="" method="get" target="_blank">
-				<input name= "analyze" type="submit" value="ENREGISTRER !" formaction="" method="get" target="_blank">
-				<input name= "analyze" type="submit" value="PARTAGER !" formaction="" method="get" target="_blank">
+			<div class="buttons">   
+				<input name="save" type="submit" value="ENREGISTRER !">
+				<input name="contact" type="submit" value="LANCEZ VOTRE CAMPAGNE MAINTENANT !">				
 			</div>
 		</section>
 

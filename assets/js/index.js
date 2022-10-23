@@ -1,4 +1,5 @@
 import { words, recordPhrase } from './keyword-extractor.js'
+import { AudienceFetcher } from './audience-fetcher.js';
 
 /**
  * This application allow user to enter an url, extract keywords from this url and analyse available audiences of those keywords
@@ -16,71 +17,6 @@ const start = () => {
 	 */
 	const convertToArray = (nonArray) => Array.prototype.slice.call(nonArray);
 
-	const fetchAudience = (id, timestamp, keywords, pages) => {
-		if(!pages) {
-			pages = 0;
-		}
-
-		fetch(`https://dashboard.platform.pm/wsora/rtkeywords-get.php?id=${id}&pages=${Math.round((pages / (Date.now() - timestamp)) * 86400000)}`, {
-			method: 'POST',
-			body: keywords.join("\n")
-		}).then(response => {
-			response.json()
-				.then(data => {
-					pages += data.pages;
-
-					let mediaPlanning = Object.keys(data.domains).sort((a, b) => {
-						return data.domains[a] < data.domains[b] ? 1: -1;
-					}).slice(0, 30);
-
-					mediaPlanning = mediaPlanning.map(value => `<div>${value}</div>`);
-					document.querySelector(".mediaplanning .value").innerHTML = mediaPlanning.join("");
-
-					console.log(mediaPlanning);
-
-					setTimeout(() => {
-						fetchAudience(id, timestamp, keywords, pages);
-					}, 1000);
-				})
-				.catch(err => {
-
-				})
-		}).catch(err => {
-
-		});
-	};
-
-	/**
-	 * Start the keyword analysis
-	 * 
-	 *  @param {Array} keywords list of keywords
-	 */
-	const startAnalysis = (keywords) => {
-
-		document.querySelector(".keywords .value .details").innerHTML = keywords.join(", ");
-
-		fetch(`https://dashboard.platform.pm/wsora/rtkeywords-start.php`, {
-			method: 'POST',
-			body: keywords.join("\n")
-		}).then(response => {
-
-			response.json()
-				.then(data => {
-					if(data.ok) {
-						fetchAudience(data.id, Date.now(), keywords);
-					}
-				})
-				.catch(err => {
-
-				})
-
-		}).catch(err => {
-
-		});
-
-		showSection("#analysis");
-	};
-
 	/**
 	 * Used to hide all displayed section and display the one needed
 	 *
@@ -92,7 +28,13 @@ const start = () => {
 		});
 
 		document.querySelector(section).classList.remove("hidden");
-	};
+	}; 
+
+	const saveAnalysis = () => {
+		return new Promise((resolve, reject) => {
+			
+		});
+	}
 
 	/**
 	 * Used to parse an array of keywords and built HTML markup
@@ -144,18 +86,47 @@ const start = () => {
 										.filter(keyword => keyword.querySelector("input").checked) // filter keywords that are actually checked
 										.map(htmlElement => htmlElement.innerText); // extract innerText to have the text value instead of an HTMLElement
 
-			const selectedManualKeywords = document.querySelector("textarea[name='manual-keywords']").value
-											.replace(/\W/g, "") // remove unecessary whitespaces
-											.split(","); // convert the string to an array
-
-			// If we have manual keywords, concat them with the automatic keywords
-			const selectedKeywords = selectedManualKeywords.length ? selectedAutomaticKeywords.concat(selectedManualKeywords) : selectedManualKeywords;
-
-			if(!selectedKeywords.length) { // we must have at least one keywords to start the analysis
-
+			let selectedManualKeywords = document.querySelector("textarea[name='manual-keywords']").value;
+			if(selectedManualKeywords) {
+				selectedManualKeywords
+					.replace(/\s/g, "") // remove unecessary whitespaces
+					.split(","); // convert the string to an array
 			}
 
-			startAnalysis(selectedKeywords);
+			// If we have manual keywords, concat them with the automatic keywords
+			const selectedKeywords = selectedManualKeywords.length ? selectedAutomaticKeywords.concat(selectedManualKeywords) : selectedAutomaticKeywords;
+
+			const errorFeedBack = document.querySelector("#keywords .error-feedback");
+			if(!selectedKeywords.length) { // we must have at least one keywords to start the analysis
+				errorFeedBack.style.display = "block";
+				return;
+			} 
+
+			errorFeedBack.style.display = "none";
+
+			showSection("#analysis");
+			
+			const audienceAnalysis = new AudienceFetcher(selectedKeywords);
+			audienceAnalysis.start();
+
+			document.querySelector(".edit-keywords").addEventListener("click", () => {
+				audienceAnalysis.stop();
+				showSection("#keywords");
+			});
+
+			document.querySelector("input[name=save]").addEventListener("click", () => {
+				saveAnalysis()
+					.then(id => {
+						console.log(id);
+					});
+			});
+
+			document.querySelector("input[name=contact]").addEventListener("click", () => {
+				saveAnalysis()
+					.then(id => {
+						window.location.href = `https://piximedia.com/contact/?id=${id}`;
+					});
+			});
 		});
 
 		showSection("#keywords");

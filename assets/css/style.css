@@ -46,7 +46,7 @@ input[type="text"] {
 	outline: none;
 }
 
-input[type="text"].loading {
+.loading {
 	background: url("../image/loaderflat64.gif") no-repeat 85% 50% / auto;
 }
 
@@ -86,6 +86,11 @@ section {
 	box-sizing: border-box;
 }
 
+section#url {
+	background: transparent;
+	border: none;
+}
+
 .hidden {
 	display: none;
 }
@@ -100,6 +105,12 @@ section {
 	cursor: pointer;
 	margin-right: 20px;
 	font-size: 13px;
+}
+
+.error-feedback {
+	margin-top: 20px;
+    color: firebrick;
+	display: none;
 }
 
 .content {
@@ -167,6 +178,10 @@ section {
 	align-items: center;
 }
 
+.keywords .value {
+	padding: 5px 10px;
+}
+
 .details {
 	font-size: 14px; 
 	flex-grow: 1;
@@ -181,15 +196,20 @@ section {
 	background-color: rgb(115, 125, 135);
 	padding: 5px 15px;
 	color: white;
+	cursor: pointer;
 }
 
 .audit {
 	display: flex;
-	justify-content: space-evenly;
+	justify-content: space-around;
 }
 
 .audience-results div:first-of-type {
 	font-weight: 600;
+}
+
+.audience-results .number {
+	text-align: center;
 }
 
 .mediaplanning .value {
