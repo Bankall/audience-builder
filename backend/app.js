@@ -5,7 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser'); // it's a middleware module to extracts the entire body of an incoming request stream and exposes it to req.body (after 4th version of express)
 const mysql = require('mysql');
 const myconnection = require('express-myconnection');
-
+const crypto = require("crypto");
 const app = express();  // const app assigned to express function wich is instantiated => see end of code about the listenning method of the app variable with a callback  
 
 const fs = require("fs");
@@ -65,7 +65,8 @@ app.get("/analysis/:id", (request, response, next) => {
 // POST method to insert a new row in a table of the database 
 app.post("/analysis", (request, response, next) => {
 
-	const { id, url, automatic_keywords, manual_keywords, analysis_results } = request.body;
+	const { url, automatic_keywords, manual_keywords, analysis_results } = request.body;
+	const id = crypto.createHash('md5').update(Math.random().toString()).digest("hex").slice(0, 5);
     
     request.getConnection((err, conn) => {
         if (err) { 
@@ -84,7 +85,7 @@ app.post("/analysis", (request, response, next) => {
             	return;    
             }
                 
-            response.send(JSON.stringify("POSTED"));
+            response.send(JSON.stringify({"ok": true, "id": id}));
         });
     });
 });
