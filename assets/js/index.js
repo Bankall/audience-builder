@@ -114,12 +114,12 @@ const start = () => {
 		keywords.forEach(keyword => {
 			wrapper.innerHTML += 
 				`<div class="keyword">
-					<input type="checkbox" name="${keyword}" ${savedData.automatic_keywords.indexOf(keyword) !== -1 ? "checked": ""}/>
+					<input type="checkbox" name="${keyword}" ${savedData && savedData.automatic_keywords.indexOf(keyword) !== -1 ? "checked": ""}/>
 					<label for="${keyword}">${keyword}</label>
 				</div>`;
 		});
 
-		if(savedData.manual_keywords) {
+		if(savedData && savedData.manual_keywords) {
 			document.querySelector("textarea[name='manual-keywords']").value = savedData.manual_keywords;
 		}
 
