@@ -9,7 +9,7 @@ const myconnection = require('express-myconnection');
 const app = express();  // const app assigned to express function wich is instantiated => see end of code about the listenning method of the app variable with a callback  
 
 const fs = require("fs");
-const credentialsPath = `~/.credentials.json`;
+const credentialsPath = `/etc/piximedia/.credentials.json`;
 
 if(!fs.existsSync(credentialsPath)) {
 	return console.log("No credentials found");
