@@ -231,3 +231,13 @@ section#url {
 	margin: 0 3px;
 	font-size: 12px;
 }
+
+.save-feedback {
+	margin-top: 20px;
+	text-align: center;
+}
+
+.save-feedback a {
+    color: #c0a268;
+    font-size: 17px;
+}

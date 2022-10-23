@@ -1,6 +1,8 @@
 import { words, recordPhrase } from './keyword-extractor.js'
 import { AudienceFetcher } from './audience-fetcher.js';
 
+const SERVER_URL = "http://34.255.120.5:3000";
+
 /**
  * This application allow user to enter an url, extract keywords from this url and analyse available audiences of those keywords
  * @param {}  .
@@ -29,6 +31,17 @@ const start = () => {
 
 		document.querySelector(section).classList.remove("hidden");
 	}; 
+
+	/**
+	 * Get a sharable url of the analysis 
+	 *
+	 * @param {String} id ID of the analysis.
+	 * @return {String} sharable url
+	 */
+	const getSharableURL = (id) => {
+		const baseUrl = window.location.hostname === '127.0.0.1'? `http://${window.location.host}`: "https://piximedia.com/audience-builder/";
+		return `${baseUrl}?id=${id}`;
+	}
 	
 	/**
 	 * Returns an array with all selected automatic keyword
@@ -51,22 +64,23 @@ const start = () => {
 		
 		if(!selectedManualKeywords) { return []; }
 		
-		selectedManualKeywords
-			.replace(/\s/g, "") // remove unecessary whitespaces
-			.split(","); // convert the string to an array
-	
-		return selectedManualKeywords;
+		return selectedManualKeywords
+				.replace(/\s/g, "") // remove unecessary whitespaces
+				.split(","); // convert the string to an array
 	};
 
 	const saveAnalysis = (audienceAnalysis) => {
 		return new Promise((resolve, reject) => {
-			fetch(`http://34.255.120.5:3000/analysis/`, {
-				method: 'POST',
-				body: JSON.stringify({
+			fetch(`${SERVER_URL}/analysis/`, {
+				"method": 'POST',
+				"headers": {
+					"content-type": "application/json"
+				},
+				"body": JSON.stringify({
 					url: urlInput.value,
-					automatic_keywords: getAutomaticKeywords(),
-					manual_keywords: getManualKeywords(),
-					analysis_results: audienceAnalysis.getResults()
+					automatic_keywords: getAutomaticKeywords().join(','),
+					manual_keywords: getManualKeywords().join(','),
+					analysis_results: audienceAnalysis.getResults().join(',')
 				})
 			}).then(response => {
 				response.json()
@@ -89,7 +103,7 @@ const start = () => {
 	 *
 	 * @param {Array} keywords The keywords to present.
 	 */
-	const presentKeywords = (keywords) => {
+	const presentKeywords = (keywords, savedData) => {
 		const wrapper = document.querySelector("#keywords .content");
 
 		if(!keywords.length) {
@@ -100,10 +114,14 @@ const start = () => {
 		keywords.forEach(keyword => {
 			wrapper.innerHTML += 
 				`<div class="keyword">
-					<input type="checkbox" name="${keyword}" />
+					<input type="checkbox" name="${keyword}" ${savedData.automatic_keywords.indexOf(keyword) !== -1 ? "checked": ""}/>
 					<label for="${keyword}">${keyword}</label>
 				</div>`;
 		});
+
+		if(savedData.manual_keywords) {
+			document.querySelector("textarea[name='manual-keywords']").value = savedData.manual_keywords;
+		}
 
 		// check all keywords on click
 		document.querySelector("#check-keywords").addEventListener("click", () => {
@@ -159,14 +177,15 @@ const start = () => {
 			document.querySelector("input[name=save]").addEventListener("click", () => {
 				saveAnalysis(audienceAnalysis)
 					.then(id => {
-						console.log(id);
+						const url = getSharableURL(id);
+						document.querySelector(".save-feedback").innerHTML = `<a href=${url}>${url}</a>`;
 					});
 			});
 
 			document.querySelector("input[name=contact]").addEventListener("click", () => {
 				saveAnalysis(audienceAnalysis)
 					.then(id => {
-						window.location.href = `https://piximedia.com/contact/?id=${id}`;
+						window.location.href = `https://piximedia.com/contact/?url=${encodeURIComponent(getSharableURL(id))}`;
 					});
 			});
 		});
@@ -263,6 +282,8 @@ const start = () => {
 	const setNewUrlParameter = (value) => {
 		const newUrl = new URL(window.location); 
 
+		if(newUrl.searchParams.has("id")) { return; }
+
 		if(value) {
 			newUrl.searchParams.set('url', value); //  set in the url field
 		} else {
@@ -275,7 +296,7 @@ const start = () => {
 	/**
 	 * Used to verify if url is valid and start to search keywords  
 	 */
-	const startKeywordFinder = () => {
+	const startKeywordFinder = (savedData) => {
 
 		let urlValue = urlInput.value;
 
@@ -306,7 +327,7 @@ const start = () => {
 				keywords = extractKeywords(data);
 			}
 
-			presentKeywords(keywords);
+			presentKeywords(keywords, savedData);
 		});
 	};
 
@@ -339,10 +360,27 @@ const start = () => {
 
 	const urlParams = new URLSearchParams(window.location.search); 
 	const url = urlParams.get("url");
+	const id = urlParams.get("id");
 
 	if(url) { // if we have an url param start immediately
 		urlInput.value = url;
-		startKeywordFinder();
+		return startKeywordFinder();
+	}
+
+	if(id) {
+		fetch(`${SERVER_URL}/analysis/${id}`)
+			.then(response => {
+				response.json()
+					.then(data => {
+						data = data[0];
+						data.automatic_keywords = data.automatic_keywords.split(",");
+						data.manual_keywords = data.manual_keywords;
+
+						urlInput.value = data.url;
+
+						startKeywordFinder(data);
+					});
+			});
 	}
 };
 
