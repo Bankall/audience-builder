@@ -8,16 +8,25 @@ const myconnection = require('express-myconnection');
 
 const app = express();  // const app assigned to express function wich is instantiated => see end of code about the listenning method of the app variable with a callback  
 
+const fs = require("fs");
+const credentialsPath = `~/.credentials.json`;
+
+if(!fs.existsSync(credentialsPath)) {
+	return console.log("No credentials found");
+}
+
+const sqlCredentials = JSON.parse(fs.readFileSync(credentialsPath)).mysql; 
+
 //Object with configurations of connection to the bdd
 const config = {
     host: 'localhost',
     user : 'root',
-    password:'',
+    password: sqlCredentials.password,
     port: 3306, // default port of mysql
     database: 'audience_builder'
 };
 
-app.use(myconnection(mysql,config,'pool')); // middleware with app.use variable => connecting betweenn app and bdd mysql (3 params)
+app.use(myconnection(mysql, config, 'pool')); // middleware with app.use variable => connecting betweenn app and bdd mysql (3 params)
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(bodyParser.json());
