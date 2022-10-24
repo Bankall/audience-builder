@@ -1,4 +1,4 @@
-const PORT = 3000;
+const PORT = 443; // Default SSL Port
 
 // Modules express installed for Node.js (use express, express-myconnction, body-parser and to manipulate Mysql Database      
 const express = require('express');
@@ -7,16 +7,29 @@ const bodyParser = require('body-parser'); // it's a middleware module to extrac
 const mysql = require('mysql');
 const myconnection = require('express-myconnection');
 const crypto = require("crypto");
+const https = require("https");
 const app = express();  // const app assigned to express function wich is instantiated => see end of code about the listenning method of the app variable with a callback  
 
 const fs = require("fs");
 const credentialsPath = `/etc/piximedia/.credentials.json`;
+const sslCertificatesPath = `/etc/piximedia/ssl/`;
 
-if(!fs.existsSync(credentialsPath)) {
-	return console.log("No credentials found");
+if(	!fs.existsSync(credentialsPath) ||
+	!fs.existsSync(`${sslCertificatesPath}key.pem`) ||
+	!fs.existsSync(`${sslCertificatesPath}cert.pem`)) {
+	return console.log("No credentials or SSL certificates found");
 }
 
 const sqlCredentials = JSON.parse(fs.readFileSync(credentialsPath)).mysql; 
+
+const SSLOptions = {
+	key: fs.readFileSync(`${sslCertificatesPath}key.pem`),
+	cert: fs.readFileSync(`${sslCertificatesPath}cert.pem`)
+}
+
+const server = https.createServer(SSLOptions, app).listen(PORT, () => {
+	console.log(`Express listening on port ${PORT}`);
+});
 
 //Object with configurations of connection to the bdd
 const config = {
@@ -89,9 +102,4 @@ app.post("/analysis", (request, response, next) => {
             response.send(JSON.stringify({"ok": true, "id": id}));
         });
     });
-});
-
-// Listen on environment port 3000 => on const app, param PORT and a callback arrow fct
-app.listen(PORT, () =>{
-    console.log("Waiting on port", PORT);  // const PORT = 3000 (ligne1)
 });
