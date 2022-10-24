@@ -1,4 +1,4 @@
-const PORT = 443; // Default SSL Port
+const PORT = 3000; // Port
 
 // Modules express installed for Node.js (use express, express-myconnction, body-parser and to manipulate Mysql Database      
 const express = require('express');
