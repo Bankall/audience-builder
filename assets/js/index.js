@@ -1,7 +1,7 @@
 import { words, recordPhrase } from './keyword-extractor.js'
 import { AudienceFetcher } from './audience-fetcher.js';
 
-const SERVER_URL = "http://34.255.120.5:3000";
+const SERVER_URL = "https://audience-backend.piximedia.com:3000";
 
 /**
  * This application allow user to enter an url, extract keywords from this url and analyse available audiences of those keywords
