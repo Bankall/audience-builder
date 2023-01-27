@@ -104,11 +104,15 @@ export class AudienceFetcher {
 				
 				if(!data) { return; }
 				
-				this.pages += data.pages;
+				if(data.pages) {
+					this.pages += data.pages;
+				}
 
 				// store received domains into the mediaPlanning object
 				Object.keys(data.domains).forEach(value => {
-					this.mediaPlanning[value] = data.domains[value];
+					if(value) {
+						this.mediaPlanning[value] = data.domains[value];	
+					}					
 				});
 
 				if(first) {
@@ -143,6 +147,10 @@ export class AudienceFetcher {
 
 	handleKeywordsDisplay () {
 		document.querySelector(".keywords .value .details").innerHTML = this.keywords.join(", ");
+	}
+
+	handleCSVExport() {
+		return `data:text/csv;charset=utf-8,${Object.keys(this.mediaPlanning).join("\n")}`;
 	}
 
 	errorHandler(err) {

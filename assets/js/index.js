@@ -182,6 +182,32 @@ const start = () => {
 					});
 			});
 
+			const exportButton = document.querySelector("input[name=export]");
+
+			exportButton.setAttribute("readonly", "readonly");
+			exportButton.addEventListener("click", () => {
+				if(exportButton.hasAttribute("readonly")) {
+					return;
+				}
+
+				const CSVData = encodeURI(audienceAnalysis.handleCSVExport());
+				const link = document.createElement("a");
+				
+				link.setAttribute("href", CSVData);
+				link.setAttribute("download", `Domain Whitelist ${encodeURIComponent(urlInput.value)}.csv`);
+
+				document.body.appendChild(link);
+				link.click();
+			});
+			
+			const enableExportButtonInterval = setInterval(function() {
+				console.log(audienceAnalysis)
+				if(Object.keys(audienceAnalysis.mediaPlanning).length > 5) {
+					clearInterval(enableExportButtonInterval);
+					exportButton.removeAttribute("readonly");
+				}
+			}, 500);
+
 			document.querySelector("input[name=contact]").addEventListener("click", () => {
 				saveAnalysis(audienceAnalysis)
 					.then(id => {
